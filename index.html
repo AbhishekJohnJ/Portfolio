@@ -244,14 +244,8 @@
 
     </div>
 
-    <!-- Lightbox Modal -->
-    <div id="cert-modal" class="cert-modal" onclick="closeCert(event)">
-      <div class="cert-modal-inner">
-        <button class="cert-close" onclick="closeCert()">&times;</button>
-        <p id="cert-modal-title"></p>
-        <img id="cert-modal-img" src="" alt="Certificate Preview" />
-      </div>
-    </div>
+    <!-- Lightbox Modal placeholder (moved to body level) -->
+
   </div>
 </section>
 
@@ -295,6 +289,15 @@
 <footer>
   <p>Designed & Built by <span>Abhishek John J</span> · © 2026</p>
 </footer>
+
+<!-- ── Cert Lightbox Modal ── -->
+<div id="cert-modal" class="cert-modal" onclick="closeCert(event)">
+  <div class="cert-modal-inner">
+    <button class="cert-close" onclick="closeCert()">&times;</button>
+    <p id="cert-modal-title"></p>
+    <img id="cert-modal-img" src="" alt="Certificate Preview" />
+  </div>
+</div>
 
 <script src="script.js"></script>
 </body>
