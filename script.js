@@ -78,7 +78,7 @@ let W, H, particles;
 const mouse = { x: -9999, y: -9999 };
 const CONNECT_DIST = 150;
 const MOUSE_DIST   = 120;
-const COUNT        = 80;
+const COUNT        = 50;
 
 window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
 window.addEventListener('mouseleave', () => { mouse.x = -9999; mouse.y = -9999; });
@@ -132,18 +132,51 @@ function drawParticles() {
       p.y += (mdy / md) * force * 2.5;
     }
 
-    // Glow for larger particles
-    if (p.r > 1.2) {
-      ctx.shadowBlur  = 6;
-      ctx.shadowColor = `rgba(74,222,128,${p.a * 0.8})`;
-    } else {
-      ctx.shadowBlur = 0;
-    }
+    // Strong green glow via shadow
+    ctx.shadowBlur  = p.r > 1.2 ? 18 : 8;
+    ctx.shadowColor = `rgba(0,255,80,${p.a})`;
 
+    // Core particle — bright neon green
     ctx.beginPath();
     ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(34,197,94,${p.a})`;
+    ctx.fillStyle = `rgba(57,255,100,${p.a})`;
     ctx.fill();
+
+    // Double-layer glow: wide soft bloom
+    const bloom = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 6);
+    bloom.addColorStop(0,   `rgba(0,255,80,${p.a * 0.45})`);
+    bloom.addColorStop(0.3, `rgba(0,220,60,${p.a * 0.20})`);
+    bloom.addColorStop(0.7, `rgba(0,180,40,${p.a * 0.07})`);
+    bloom.addColorStop(1,   `rgba(0,255,80,0)`);
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r * 6, 0, Math.PI * 2);
+    ctx.fillStyle = bloom;
+    ctx.fill();
+
+    // Tight inner green glare ring
+    const ring = ctx.createRadialGradient(p.x, p.y, p.r * 0.4, p.x, p.y, p.r * 2);
+    ring.addColorStop(0,   `rgba(150,255,150,${p.a * 0.6})`);
+    ring.addColorStop(0.5, `rgba(0,255,80,${p.a * 0.25})`);
+    ring.addColorStop(1,   `rgba(0,255,80,0)`);
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r * 2, 0, Math.PI * 2);
+    ctx.fillStyle = ring;
+    ctx.fill();
+
+    // Specular glint — green-white top-left highlight
+    if (p.r > 1.0) {
+      const glint = ctx.createRadialGradient(
+        p.x - p.r * 0.35, p.y - p.r * 0.35, 0,
+        p.x - p.r * 0.35, p.y - p.r * 0.35, p.r * 0.8
+      );
+      glint.addColorStop(0,   `rgba(200,255,210,${p.a * 0.95})`);
+      glint.addColorStop(0.5, `rgba(100,255,140,${p.a * 0.35})`);
+      glint.addColorStop(1,   `rgba(0,255,80,0)`);
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = glint;
+      ctx.fill();
+    }
   });
 
   ctx.shadowBlur = 0;
