@@ -75,51 +75,111 @@ document.getElementById('contact-form').addEventListener('submit', e => {
 const canvas = document.getElementById('particles');
 const ctx    = canvas.getContext('2d');
 let W, H, particles;
+const mouse = { x: -9999, y: -9999 };
+const CONNECT_DIST = 150;
+const MOUSE_DIST   = 120;
+const COUNT        = 80;
+
+window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+window.addEventListener('mouseleave', () => { mouse.x = -9999; mouse.y = -9999; });
 
 function resize() {
   W = canvas.width  = window.innerWidth;
   H = canvas.height = window.innerHeight;
 }
 
-function initParticles() {
-  particles = Array.from({ length: 80 }, () => ({
+function mkParticle() {
+  const baseAlpha = Math.random() * 0.35 + 0.08;
+  return {
     x:  Math.random() * W,
     y:  Math.random() * H,
-    r:  Math.random() * 1.2 + 0.3,
-    vx: (Math.random() - 0.5) * 0.3,
-    vy: (Math.random() - 0.5) * 0.3,
-    a:  Math.random() * 0.5 + 0.1
-  }));
+    r:  Math.random() * 1.6 + 0.4,
+    vx: (Math.random() - 0.5) * 0.45,
+    vy: (Math.random() - 0.5) * 0.45,
+    baseAlpha,
+    a: baseAlpha,
+    // twinkle
+    twinkleSpeed: Math.random() * 0.02 + 0.005,
+    twinkleDir: Math.random() > 0.5 ? 1 : -1,
+  };
+}
+
+function initParticles() {
+  particles = Array.from({ length: COUNT }, mkParticle);
 }
 
 function drawParticles() {
   ctx.clearRect(0, 0, W, H);
+
+  // Update & draw dots
   particles.forEach(p => {
-    p.x += p.vx; p.y += p.vy;
+    p.x += p.vx;
+    p.y += p.vy;
     if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
     if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
+
+    // Twinkle
+    p.a += p.twinkleSpeed * p.twinkleDir;
+    if (p.a >= p.baseAlpha + 0.18 || p.a <= p.baseAlpha - 0.06) p.twinkleDir *= -1;
+
+    // Mouse repulsion
+    const mdx = p.x - mouse.x;
+    const mdy = p.y - mouse.y;
+    const md  = Math.sqrt(mdx * mdx + mdy * mdy);
+    if (md < MOUSE_DIST) {
+      const force = (MOUSE_DIST - md) / MOUSE_DIST;
+      p.x += (mdx / md) * force * 2.5;
+      p.y += (mdy / md) * force * 2.5;
+    }
+
+    // Glow for larger particles
+    if (p.r > 1.2) {
+      ctx.shadowBlur  = 6;
+      ctx.shadowColor = `rgba(74,222,128,${p.a * 0.8})`;
+    } else {
+      ctx.shadowBlur = 0;
+    }
+
     ctx.beginPath();
     ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
     ctx.fillStyle = `rgba(34,197,94,${p.a})`;
     ctx.fill();
   });
 
-  // Draw connecting lines between nearby particles
+  ctx.shadowBlur = 0;
+
+  // Connection lines between nearby particles
   for (let i = 0; i < particles.length; i++) {
     for (let j = i + 1; j < particles.length; j++) {
-      const dx = particles[i].x - particles[j].x;
-      const dy = particles[i].y - particles[j].y;
+      const dx   = particles[i].x - particles[j].x;
+      const dy   = particles[i].y - particles[j].y;
       const dist = Math.sqrt(dx * dx + dy * dy);
-      if (dist < 120) {
+      if (dist < CONNECT_DIST) {
+        const alpha = 0.18 * (1 - dist / CONNECT_DIST);
         ctx.beginPath();
         ctx.moveTo(particles[i].x, particles[i].y);
         ctx.lineTo(particles[j].x, particles[j].y);
-        ctx.strokeStyle = `rgba(34,197,94,${0.08 * (1 - dist / 120)})`;
-        ctx.lineWidth = 0.5;
+        ctx.strokeStyle = `rgba(34,197,94,${alpha})`;
+        ctx.lineWidth   = 0.6;
         ctx.stroke();
       }
     }
+
+    // Lines from particle to mouse cursor
+    const mdx  = particles[i].x - mouse.x;
+    const mdy  = particles[i].y - mouse.y;
+    const mdist = Math.sqrt(mdx * mdx + mdy * mdy);
+    if (mdist < MOUSE_DIST) {
+      const alpha = 0.45 * (1 - mdist / MOUSE_DIST);
+      ctx.beginPath();
+      ctx.moveTo(particles[i].x, particles[i].y);
+      ctx.lineTo(mouse.x, mouse.y);
+      ctx.strokeStyle = `rgba(74,222,128,${alpha})`;
+      ctx.lineWidth   = 0.8;
+      ctx.stroke();
+    }
   }
+
   requestAnimationFrame(drawParticles);
 }
 
