@@ -241,7 +241,15 @@ section { padding: 7rem 2rem; position: relative; z-index: 1; }
 #about        { background: var(--bg-2); }
 #projects     { background: var(--bg); }
 #certificates { background: var(--bg-2); }
-#contact      { background: var(--bg-2); }
+#contact      { background: var(--bg); }
+#contact::before {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+}
 
 .container { max-width: 1100px; margin: 0 auto; }
 
