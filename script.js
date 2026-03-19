@@ -61,7 +61,7 @@ document.getElementById('contact-form').addEventListener('submit', e => {
   btn.textContent = 'Message Sent ✓';
   btn.disabled = true;
   btn.style.background = '#1a1a1a';
-  btn.style.color = '#888';
+  btn.style.color = '#555';
   setTimeout(() => {
     btn.textContent = 'Send Message ✉';
     btn.disabled = false;
@@ -100,7 +100,7 @@ function drawParticles() {
     if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
     ctx.beginPath();
     ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(255,255,255,${p.a})`;
+    ctx.fillStyle = `rgba(34,197,94,${p.a})`;
     ctx.fill();
   });
 
@@ -114,7 +114,7 @@ function drawParticles() {
         ctx.beginPath();
         ctx.moveTo(particles[i].x, particles[i].y);
         ctx.lineTo(particles[j].x, particles[j].y);
-        ctx.strokeStyle = `rgba(255,255,255,${0.06 * (1 - dist / 120)})`;
+        ctx.strokeStyle = `rgba(34,197,94,${0.08 * (1 - dist / 120)})`;
         ctx.lineWidth = 0.5;
         ctx.stroke();
       }
