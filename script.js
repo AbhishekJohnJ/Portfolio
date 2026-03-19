@@ -223,3 +223,17 @@ function closeProjectModal() {
 modalClose.addEventListener('click', closeProjectModal);
 modal.addEventListener('click', e => { if (e.target === modal) closeProjectModal(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeProjectModal(); });
+
+/* ── CodeChef Badge Preview ── */
+document.querySelectorAll('.cc-badge[data-src]').forEach(badge => {
+  badge.style.cursor = 'pointer';
+  badge.addEventListener('click', e => {
+    e.preventDefault();
+    e.stopPropagation();
+    const modal = document.getElementById('cert-modal');
+    document.getElementById('cert-modal-img').src = badge.dataset.src;
+    document.getElementById('cert-modal-title').textContent = badge.dataset.title;
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  });
+});
