@@ -225,15 +225,36 @@ modal.addEventListener('click', e => { if (e.target === modal) closeProjectModal
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeProjectModal(); });
 
 /* ── CodeChef Badge Preview ── */
+const badgeModal      = document.getElementById('badge-modal');
+const badgeModalImg   = document.getElementById('badge-modal-img');
+const badgeModalTitle = document.getElementById('badge-modal-title');
+const badgeModalClose = document.getElementById('badge-modal-close');
+
 document.querySelectorAll('.cc-badge[data-src]').forEach(badge => {
   badge.style.cursor = 'pointer';
   badge.addEventListener('click', e => {
     e.preventDefault();
     e.stopPropagation();
-    const modal = document.getElementById('cert-modal');
-    document.getElementById('cert-modal-img').src = badge.dataset.src;
-    document.getElementById('cert-modal-title').textContent = badge.dataset.title;
-    modal.classList.add('open');
+    badgeModalImg.src       = badge.dataset.src;
+    badgeModalTitle.textContent = badge.dataset.title;
+    badgeModal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
   });
+});
+
+badgeModalClose.addEventListener('click', () => {
+  badgeModal.style.display = 'none';
+  document.body.style.overflow = '';
+});
+badgeModal.addEventListener('click', e => {
+  if (e.target === badgeModal) {
+    badgeModal.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && badgeModal.style.display === 'flex') {
+    badgeModal.style.display = 'none';
+    document.body.style.overflow = '';
+  }
 });

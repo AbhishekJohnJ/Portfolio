@@ -169,7 +169,14 @@
   </div>
 </section>
 
-<!-- ── Project Modal ── -->
+<!-- ── Badge Preview Modal ── -->
+<div id="badge-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:3000;align-items:center;justify-content:center;padding:2rem;backdrop-filter:blur(10px);">
+  <div style="position:relative;max-width:400px;width:100%;text-align:center;">
+    <button id="badge-modal-close" style="position:absolute;top:-2.5rem;right:0;background:none;border:1px solid rgba(255,255,255,0.1);color:#fff;font-size:1.3rem;width:36px;height:36px;border-radius:50%;cursor:pointer;">&times;</button>
+    <p id="badge-modal-title" style="color:#888;font-size:0.8rem;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:1rem;"></p>
+    <img id="badge-modal-img" src="" alt="" style="width:100%;border-radius:12px;border:1px solid rgba(255,255,255,0.1);" />
+  </div>
+</div>
 <div id="project-modal" class="project-modal" role="dialog" aria-modal="true">
   <div class="project-modal-inner glass">
     <button class="project-modal-close" id="modal-close" aria-label="Close">&times;</button>
