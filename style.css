@@ -33,6 +33,10 @@ a, button, input, textarea, [role="button"] {
   cursor: none;
 }
 
+*, *:hover {
+  cursor: none !important;
+}
+
 /* ── Particles ── */
 #particles {
   position: fixed;

@@ -324,6 +324,7 @@ document.addEventListener('keydown', e => {
   const TRAIL_LEN = 28;
   const points    = [];
   let   cx = -999, cy = -999;
+  let   isPointer = false;
 
   const tc = document.createElement('canvas');
   tc.id    = 'cursor-trail';
@@ -339,21 +340,31 @@ document.addEventListener('keydown', e => {
   resizeTrail();
   window.addEventListener('resize', resizeTrail);
 
-  window.addEventListener('mousemove', e => { cx = e.clientX; cy = e.clientY; });
+  window.addEventListener('mousemove', e => {
+    cx = e.clientX;
+    cy = e.clientY;
+    const el = document.elementFromPoint(cx, cy);
+    isPointer = !!el && !!el.closest('a, button, [role="button"], input[type="submit"], label, .cert-card, .project-card, .cc-badge, .btn');
+  });
+
+  // Animated ring radius for smooth scale transition
+  let ringR = 9;
 
   function drawTrail() {
-    // Push current position
     points.push({ x: cx, y: cy });
     if (points.length > TRAIL_LEN) points.shift();
 
+    // Smoothly animate ring size
+    const targetR = isPointer ? 16 : 9;
+    ringR += (targetR - ringR) * 0.18;
+
     tctx.clearRect(0, 0, TW, TH);
 
-    // ── Comet tail (line with gradient stroke) ──
+    // ── Comet tail ──
     if (points.length > 2) {
       tctx.beginPath();
       tctx.moveTo(points[0].x, points[0].y);
       for (let i = 1; i < points.length; i++) {
-        // Smooth curve through midpoints
         const mx = (points[i - 1].x + points[i].x) / 2;
         const my = (points[i - 1].y + points[i].y) / 2;
         tctx.quadraticCurveTo(points[i - 1].x, points[i - 1].y, mx, my);
@@ -375,25 +386,66 @@ document.addEventListener('keydown', e => {
       tctx.shadowBlur  = 0;
     }
 
-    // ── Cursor dot: outer ring + inner fill ──
     if (cx > 0) {
-      // Outer ring
-      tctx.beginPath();
-      tctx.arc(cx, cy, 9, 0, Math.PI * 2);
-      tctx.strokeStyle = 'rgba(74,222,128,0.9)';
-      tctx.lineWidth   = 1.5;
-      tctx.shadowBlur  = 12;
-      tctx.shadowColor = 'rgba(74,222,128,0.7)';
-      tctx.stroke();
+      if (isPointer) {
+        // ── Pointer state: rotating diamond ──
+        const t   = Date.now() * 0.003;
+        const s   = 10 + Math.sin(t * 2) * 2; // pulsing size
+        const rot = t;                          // continuous rotation
 
-      // Inner dot
-      tctx.beginPath();
-      tctx.arc(cx, cy, 2.5, 0, Math.PI * 2);
-      tctx.fillStyle   = 'rgba(74,222,128,1)';
-      tctx.shadowBlur  = 8;
-      tctx.shadowColor = 'rgba(74,222,128,1)';
-      tctx.fill();
-      tctx.shadowBlur  = 0;
+        tctx.save();
+        tctx.translate(cx, cy);
+        tctx.rotate(rot);
+
+        // Outer diamond
+        tctx.beginPath();
+        tctx.moveTo(0, -s);
+        tctx.lineTo(s, 0);
+        tctx.lineTo(0, s);
+        tctx.lineTo(-s, 0);
+        tctx.closePath();
+        tctx.strokeStyle = 'rgba(74,222,128,0.95)';
+        tctx.lineWidth   = 1.5;
+        tctx.shadowBlur  = 16;
+        tctx.shadowColor = 'rgba(74,222,128,0.8)';
+        tctx.stroke();
+
+        // Inner diamond (counter-rotate for contrast)
+        tctx.rotate(-rot * 2);
+        const si = s * 0.45;
+        tctx.beginPath();
+        tctx.moveTo(0, -si);
+        tctx.lineTo(si, 0);
+        tctx.lineTo(0, si);
+        tctx.lineTo(-si, 0);
+        tctx.closePath();
+        tctx.fillStyle  = 'rgba(74,222,128,0.25)';
+        tctx.fill();
+        tctx.strokeStyle = 'rgba(74,222,128,0.6)';
+        tctx.lineWidth   = 1;
+        tctx.stroke();
+
+        tctx.shadowBlur = 0;
+        tctx.restore();
+
+      } else {
+        // ── Default state: ring + center dot ──
+        tctx.beginPath();
+        tctx.arc(cx, cy, ringR, 0, Math.PI * 2);
+        tctx.strokeStyle = 'rgba(74,222,128,0.9)';
+        tctx.lineWidth   = 1.5;
+        tctx.shadowBlur  = 12;
+        tctx.shadowColor = 'rgba(74,222,128,0.7)';
+        tctx.stroke();
+
+        tctx.beginPath();
+        tctx.arc(cx, cy, 2.5, 0, Math.PI * 2);
+        tctx.fillStyle   = 'rgba(74,222,128,1)';
+        tctx.shadowBlur  = 8;
+        tctx.shadowColor = 'rgba(74,222,128,1)';
+        tctx.fill();
+        tctx.shadowBlur  = 0;
+      }
     }
 
     requestAnimationFrame(drawTrail);
