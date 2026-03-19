@@ -2,8 +2,8 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg:         #0E0E0E;
-  --bg-2:       #111111;
+  --bg:         #000000;
+  --bg-2:       #0a0a0a;
   --border:     rgba(34, 197, 94, 0.2);
   --glass-bg:   rgba(34, 197, 94, 0.03);
   --glass-blur: blur(16px);
@@ -54,7 +54,7 @@ body {
   transition: background 0.3s, box-shadow 0.3s;
 }
 #navbar.scrolled {
-  background: rgba(14,14,14,0.92);
+  background: rgba(0,0,0,0.92);
   backdrop-filter: blur(20px);
   box-shadow: 0 1px 0 var(--border);
 }
@@ -191,7 +191,6 @@ body {
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
-  justify-content: center;
   animation: fadeUp 0.8s 0.3s ease both;
 }
 .hero-scroll-hint {
@@ -859,7 +858,7 @@ footer span { color: var(--accent-bright); }
 
 /* ── Responsive ── */
 @media (max-width: 768px) {
-  .nav-links { display: none; flex-direction: column; position: absolute; top: 64px; left: 0; width: 100%; background: rgba(14,14,14,0.98); padding: 1.5rem 2rem; gap: 1.2rem; border-bottom: 1px solid var(--border); }
+  .nav-links { display: none; flex-direction: column; position: absolute; top: 64px; left: 0; width: 100%; background: rgba(0,0,0,0.98); padding: 1.5rem 2rem; gap: 1.2rem; border-bottom: 1px solid var(--border); }
   .nav-links.open { display: flex; }
   .hamburger { display: block; }
   .hero-inner { flex-direction: column-reverse; text-align: center; gap: 2rem; }
