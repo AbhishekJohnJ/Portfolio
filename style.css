@@ -167,12 +167,21 @@ a, button, input, textarea, [role="button"] {
   letter-spacing: 0.2em;
   text-transform: uppercase;
   margin-bottom: 1.2rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   background: linear-gradient(90deg, var(--text-muted) 0%, var(--accent-bright) 50%, var(--text-muted) 100%);
   background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   animation: fadeUp 0.8s ease both, shimmer 4s 1s linear infinite;
+}
+.hero-tag-icon {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  -webkit-text-fill-color: initial;
 }
 .hero-name {
   font-family: 'Space Grotesk', sans-serif;
