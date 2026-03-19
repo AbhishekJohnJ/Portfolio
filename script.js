@@ -321,14 +321,13 @@ document.addEventListener('keydown', e => {
 
 /* ── Cursor Trail ── */
 (function () {
-  const trail = [];
-  const MAX   = 22;
-  let   animId;
+  const TRAIL_LEN = 28;
+  const points    = [];
+  let   cx = -999, cy = -999;
 
-  // Off-screen canvas overlay (above particles, below content)
-  const tc  = document.createElement('canvas');
-  tc.id     = 'cursor-trail';
-  tc.style.cssText = 'position:fixed;inset:0;z-index:2;pointer-events:none;';
+  const tc = document.createElement('canvas');
+  tc.id    = 'cursor-trail';
+  tc.style.cssText = 'position:fixed;inset:0;z-index:999;pointer-events:none;';
   document.body.appendChild(tc);
   const tctx = tc.getContext('2d');
   let TW, TH;
@@ -340,30 +339,64 @@ document.addEventListener('keydown', e => {
   resizeTrail();
   window.addEventListener('resize', resizeTrail);
 
-  window.addEventListener('mousemove', e => {
-    trail.push({ x: e.clientX, y: e.clientY, a: 1, r: Math.random() * 2.5 + 1 });
-    if (trail.length > MAX) trail.shift();
-  });
+  window.addEventListener('mousemove', e => { cx = e.clientX; cy = e.clientY; });
 
   function drawTrail() {
+    // Push current position
+    points.push({ x: cx, y: cy });
+    if (points.length > TRAIL_LEN) points.shift();
+
     tctx.clearRect(0, 0, TW, TH);
-    for (let i = 0; i < trail.length; i++) {
-      const t     = trail[i];
-      const frac  = i / trail.length;          // 0 = oldest, 1 = newest
-      t.a         = frac * 0.7;
-      const r     = t.r * frac;
 
-      // Glow
-      tctx.shadowBlur  = 8 * frac;
-      tctx.shadowColor = `rgba(74,222,128,${t.a})`;
-
+    // ── Comet tail (line with gradient stroke) ──
+    if (points.length > 2) {
       tctx.beginPath();
-      tctx.arc(t.x, t.y, Math.max(r, 0.1), 0, Math.PI * 2);
-      tctx.fillStyle = `rgba(74,222,128,${t.a})`;
-      tctx.fill();
+      tctx.moveTo(points[0].x, points[0].y);
+      for (let i = 1; i < points.length; i++) {
+        // Smooth curve through midpoints
+        const mx = (points[i - 1].x + points[i].x) / 2;
+        const my = (points[i - 1].y + points[i].y) / 2;
+        tctx.quadraticCurveTo(points[i - 1].x, points[i - 1].y, mx, my);
+      }
+      const grad = tctx.createLinearGradient(
+        points[0].x, points[0].y,
+        points[points.length - 1].x, points[points.length - 1].y
+      );
+      grad.addColorStop(0,   'rgba(34,197,94,0)');
+      grad.addColorStop(0.6, 'rgba(74,222,128,0.25)');
+      grad.addColorStop(1,   'rgba(74,222,128,0.85)');
+      tctx.strokeStyle = grad;
+      tctx.lineWidth   = 2.5;
+      tctx.lineCap     = 'round';
+      tctx.lineJoin    = 'round';
+      tctx.shadowBlur  = 10;
+      tctx.shadowColor = 'rgba(74,222,128,0.6)';
+      tctx.stroke();
+      tctx.shadowBlur  = 0;
     }
-    tctx.shadowBlur = 0;
-    animId = requestAnimationFrame(drawTrail);
+
+    // ── Cursor dot: outer ring + inner fill ──
+    if (cx > 0) {
+      // Outer ring
+      tctx.beginPath();
+      tctx.arc(cx, cy, 9, 0, Math.PI * 2);
+      tctx.strokeStyle = 'rgba(74,222,128,0.9)';
+      tctx.lineWidth   = 1.5;
+      tctx.shadowBlur  = 12;
+      tctx.shadowColor = 'rgba(74,222,128,0.7)';
+      tctx.stroke();
+
+      // Inner dot
+      tctx.beginPath();
+      tctx.arc(cx, cy, 2.5, 0, Math.PI * 2);
+      tctx.fillStyle   = 'rgba(74,222,128,1)';
+      tctx.shadowBlur  = 8;
+      tctx.shadowColor = 'rgba(74,222,128,1)';
+      tctx.fill();
+      tctx.shadowBlur  = 0;
+    }
+
+    requestAnimationFrame(drawTrail);
   }
   drawTrail();
 })();
