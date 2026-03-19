@@ -145,3 +145,81 @@ function closeCert(e) {
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') closeCert({ target: document.getElementById('cert-modal') });
 });
+
+/* ── Projects: Click, Tilt, Ripple, Modal ── */
+const projectCards = document.querySelectorAll('.project-card[data-url]');
+const modal        = document.getElementById('project-modal');
+const modalClose   = document.getElementById('modal-close');
+const isMobile     = () => window.innerWidth < 768;
+
+// Card click → GitHub (ignore clicks on btn-details or card-link-btn)
+projectCards.forEach(card => {
+  card.style.cursor = 'pointer';
+
+  card.addEventListener('click', e => {
+    if (e.target.closest('.btn-details') || e.target.closest('.card-link-btn')) return;
+    window.open(card.dataset.url, '_blank');
+  });
+
+  // Ripple
+  card.addEventListener('mousedown', e => {
+    if (e.target.closest('.btn-details') || e.target.closest('.card-link-btn')) return;
+    const rect   = card.getBoundingClientRect();
+    const size   = Math.max(rect.width, rect.height);
+    const ripple = document.createElement('span');
+    ripple.className = 'ripple';
+    ripple.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - rect.left - size/2}px;top:${e.clientY - rect.top - size/2}px`;
+    card.appendChild(ripple);
+    ripple.addEventListener('animationend', () => ripple.remove());
+  });
+
+  // 3D Tilt (desktop only)
+  card.addEventListener('mousemove', e => {
+    if (isMobile()) return;
+    const rect  = card.getBoundingClientRect();
+    const cx    = rect.left + rect.width  / 2;
+    const cy    = rect.top  + rect.height / 2;
+    const rotX  = ((e.clientY - cy) / (rect.height / 2)) * -5;
+    const rotY  = ((e.clientX - cx) / (rect.width  / 2)) *  5;
+    card.style.transform = `translateY(-6px) rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+    card.style.transition = 'transform 0.05s linear';
+  });
+
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = '';
+    card.style.transition = 'transform 0.4s ease, border-color 0.3s, box-shadow 0.3s';
+  });
+});
+
+// Modal open
+document.querySelectorAll('.btn-details').forEach(btn => {
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    const card     = btn.closest('.project-card');
+    const features = card.dataset.features.split('|');
+    const stack    = card.dataset.stack.split(',');
+
+    document.getElementById('modal-tag').textContent   = card.querySelector('.card-tag').textContent;
+    document.getElementById('modal-title').innerHTML   = card.dataset.title;
+    document.getElementById('modal-desc').textContent  = card.dataset.desc;
+    document.getElementById('modal-gh-btn').href       = card.dataset.url;
+
+    const featEl = document.getElementById('modal-features');
+    featEl.innerHTML = features.map(f => `<li>${f}</li>`).join('');
+
+    const stackEl = document.getElementById('modal-stack');
+    stackEl.innerHTML = stack.map(s => `<span>${s.trim()}</span>`).join('');
+
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  });
+});
+
+// Modal close
+function closeProjectModal() {
+  modal.classList.remove('open');
+  document.body.style.overflow = '';
+}
+modalClose.addEventListener('click', closeProjectModal);
+modal.addEventListener('click', e => { if (e.target === modal) closeProjectModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeProjectModal(); });
