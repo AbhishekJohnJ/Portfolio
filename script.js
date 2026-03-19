@@ -318,3 +318,52 @@ document.addEventListener('keydown', e => {
     document.body.style.overflow = '';
   }
 });
+
+/* ── Cursor Trail ── */
+(function () {
+  const trail = [];
+  const MAX   = 22;
+  let   animId;
+
+  // Off-screen canvas overlay (above particles, below content)
+  const tc  = document.createElement('canvas');
+  tc.id     = 'cursor-trail';
+  tc.style.cssText = 'position:fixed;inset:0;z-index:2;pointer-events:none;';
+  document.body.appendChild(tc);
+  const tctx = tc.getContext('2d');
+  let TW, TH;
+
+  function resizeTrail() {
+    TW = tc.width  = window.innerWidth;
+    TH = tc.height = window.innerHeight;
+  }
+  resizeTrail();
+  window.addEventListener('resize', resizeTrail);
+
+  window.addEventListener('mousemove', e => {
+    trail.push({ x: e.clientX, y: e.clientY, a: 1, r: Math.random() * 2.5 + 1 });
+    if (trail.length > MAX) trail.shift();
+  });
+
+  function drawTrail() {
+    tctx.clearRect(0, 0, TW, TH);
+    for (let i = 0; i < trail.length; i++) {
+      const t     = trail[i];
+      const frac  = i / trail.length;          // 0 = oldest, 1 = newest
+      t.a         = frac * 0.7;
+      const r     = t.r * frac;
+
+      // Glow
+      tctx.shadowBlur  = 8 * frac;
+      tctx.shadowColor = `rgba(74,222,128,${t.a})`;
+
+      tctx.beginPath();
+      tctx.arc(t.x, t.y, Math.max(r, 0.1), 0, Math.PI * 2);
+      tctx.fillStyle = `rgba(74,222,128,${t.a})`;
+      tctx.fill();
+    }
+    tctx.shadowBlur = 0;
+    animId = requestAnimationFrame(drawTrail);
+  }
+  drawTrail();
+})();
