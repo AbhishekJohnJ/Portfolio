@@ -328,7 +328,7 @@ document.addEventListener('keydown', e => {
 
   const tc = document.createElement('canvas');
   tc.id    = 'cursor-trail';
-  tc.style.cssText = 'position:fixed;inset:0;z-index:999;pointer-events:none;';
+  tc.style.cssText = 'position:fixed;inset:0;z-index:99999;pointer-events:none;';
   document.body.appendChild(tc);
   const tctx = tc.getContext('2d');
   let TW, TH;
