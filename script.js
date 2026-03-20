@@ -78,7 +78,7 @@ let W, H, particles;
 const mouse = { x: -9999, y: -9999 };
 const CONNECT_DIST = 150;
 const MOUSE_DIST   = 120;
-const COUNT        = 50;
+const COUNT        = 60;
 
 window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
 window.addEventListener('mouseleave', () => { mouse.x = -9999; mouse.y = -9999; });
