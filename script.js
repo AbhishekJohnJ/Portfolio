@@ -100,14 +100,15 @@ function mkParticle() {
   return {
     x:  Math.random() * W,
     y:  Math.random() * H,
-    r:  Math.random() * 1.6 + 0.4,
+    r:  Math.random() * 2.2 + 0.8,
     vx: (Math.random() - 0.5) * 0.45,
     vy: (Math.random() - 0.5) * 0.45,
     baseAlpha,
     a: baseAlpha,
-    // twinkle
-    twinkleSpeed: Math.random() * 0.02 + 0.005,
+    twinkleSpeed: Math.random() * 0.018 + 0.004,
     twinkleDir: Math.random() > 0.5 ? 1 : -1,
+    angle: Math.random() * Math.PI,
+    spinSpeed: (Math.random() - 0.5) * 0.01,
   };
 }
 
@@ -139,51 +140,32 @@ function drawParticles() {
       p.y += (mdy / md) * force * 2.5;
     }
 
+    // Spin
+    p.angle += p.spinSpeed;
+
     // Strong green glow via shadow
-    ctx.shadowBlur  = p.r > 1.2 ? 18 : 8;
+    ctx.shadowBlur  = p.r > 1.2 ? 14 : 6;
     ctx.shadowColor = `rgba(0,255,80,${p.a})`;
 
-    // Core particle — bright neon green
+    // Draw 5-point star
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.rotate(p.angle);
+
     ctx.beginPath();
-    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    const outer = p.r;
+    const inner = p.r * 0.45;
+    for (let i = 0; i < 10; i++) {
+      const angle = (i * Math.PI) / 5 - Math.PI / 2;
+      const rad   = i % 2 === 0 ? outer : inner;
+      i === 0
+        ? ctx.moveTo(Math.cos(angle) * rad, Math.sin(angle) * rad)
+        : ctx.lineTo(Math.cos(angle) * rad, Math.sin(angle) * rad);
+    }
+    ctx.closePath();
     ctx.fillStyle = `rgba(57,255,100,${p.a})`;
     ctx.fill();
-
-    // Double-layer glow: wide soft bloom
-    const bloom = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 6);
-    bloom.addColorStop(0,   `rgba(0,255,80,${p.a * 0.45})`);
-    bloom.addColorStop(0.3, `rgba(0,220,60,${p.a * 0.20})`);
-    bloom.addColorStop(0.7, `rgba(0,180,40,${p.a * 0.07})`);
-    bloom.addColorStop(1,   `rgba(0,255,80,0)`);
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, p.r * 6, 0, Math.PI * 2);
-    ctx.fillStyle = bloom;
-    ctx.fill();
-
-    // Tight inner green glare ring
-    const ring = ctx.createRadialGradient(p.x, p.y, p.r * 0.4, p.x, p.y, p.r * 2);
-    ring.addColorStop(0,   `rgba(150,255,150,${p.a * 0.6})`);
-    ring.addColorStop(0.5, `rgba(0,255,80,${p.a * 0.25})`);
-    ring.addColorStop(1,   `rgba(0,255,80,0)`);
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, p.r * 2, 0, Math.PI * 2);
-    ctx.fillStyle = ring;
-    ctx.fill();
-
-    // Specular glint — green-white top-left highlight
-    if (p.r > 1.0) {
-      const glint = ctx.createRadialGradient(
-        p.x - p.r * 0.35, p.y - p.r * 0.35, 0,
-        p.x - p.r * 0.35, p.y - p.r * 0.35, p.r * 0.8
-      );
-      glint.addColorStop(0,   `rgba(200,255,210,${p.a * 0.95})`);
-      glint.addColorStop(0.5, `rgba(100,255,140,${p.a * 0.35})`);
-      glint.addColorStop(1,   `rgba(0,255,80,0)`);
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = glint;
-      ctx.fill();
-    }
+    ctx.restore();
   });
 
   ctx.shadowBlur = 0;
