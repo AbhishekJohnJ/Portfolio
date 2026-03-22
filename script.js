@@ -474,3 +474,18 @@ document.addEventListener('keydown', e => {
   }
   drawTrail();
 })();
+
+/* ── Demo Button Footer Hint ── */
+document.querySelectorAll('.card-link-btn[data-hint]').forEach(btn => {
+  const card = btn.closest('.project-card');
+  if (!card) return;
+  const hint = card.querySelector('.card-footer-hint');
+  if (!hint) return;
+  btn.addEventListener('mouseenter', () => {
+    hint.textContent = btn.dataset.hint;
+    hint.classList.add('visible');
+  });
+  btn.addEventListener('mouseleave', () => {
+    hint.classList.remove('visible');
+  });
+});

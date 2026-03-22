@@ -420,6 +420,23 @@ section { padding: 7rem 2rem; position: relative; z-index: 1; }
 }
 .project-card:hover .card-links a { opacity: 1; }
 .card-links a:hover { color: var(--accent-bright); }
+/* Live demo icon always slightly visible and green-tinted */
+.card-link-btn.demo-btn { color: var(--accent); opacity: 0.75; }
+.project-card:hover .card-link-btn.demo-btn { opacity: 1; }
+.card-link-btn.demo-btn:hover { color: var(--accent-bright); }
+
+/* Card footer hint — shown on demo btn hover via JS */
+.card-footer-hint {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-top: 0.75rem;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+  min-height: 1em;
+}
+.card-footer-hint.visible { opacity: 1; }
 
 .card-link-btn[data-tooltip]::after {
   content: attr(data-tooltip);
@@ -495,6 +512,18 @@ section { padding: 7rem 2rem; position: relative; z-index: 1; }
   margin-bottom: 0.6rem;
 }
 .project-card p { font-size: 0.875rem; color: var(--text-muted); margin-bottom: 1.2rem; }
+.card-hint {
+  font-size: 0.72rem !important;
+  margin-top: 0.8rem !important;
+  margin-bottom: 0 !important;
+}
+.card-hint a {
+  color: var(--text-muted) !important;
+  text-decoration: none;
+  opacity: 0.6;
+  transition: color 0.2s, opacity 0.2s;
+}
+.card-hint a:hover { color: var(--accent-bright) !important; opacity: 1; }
 
 .tech-stack { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .tech-stack span {
