@@ -54,6 +54,13 @@ const revealObserver = new IntersectionObserver((entries) => {
 
 document.querySelectorAll('[data-aos]').forEach(el => revealObserver.observe(el));
 
+/* ── Stagger Reveal ── */
+const staggerObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); staggerObserver.unobserve(e.target); } });
+}, { threshold: 0.08 });
+
+document.querySelectorAll('[data-stagger]').forEach(el => staggerObserver.observe(el));
+
 /* ── Contact Form ── */
 document.getElementById('contact-form').addEventListener('submit', e => {
   e.preventDefault();
