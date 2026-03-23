@@ -436,7 +436,11 @@ section { padding: 7rem 2rem; position: relative; z-index: 1; }
   pointer-events: none;
   min-height: 1em;
 }
-.card-footer-hint.visible { opacity: 1; }
+.card-footer-hint.visible {
+  opacity: 1;
+  color: var(--accent-bright);
+  text-shadow: 0 0 8px rgba(74,222,128,0.4);
+}
 
 .card-link-btn[data-tooltip]::after {
   content: attr(data-tooltip);
