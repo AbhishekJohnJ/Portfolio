@@ -211,7 +211,18 @@ initParticles();
 drawParticles();
 
 /* ── Certificate Lightbox ── */
+let openedFromAllCertsModal = false;
+
 function openCert(src, title) {
+  // Check if the all-certificates modal is open
+  const allCertsModal = document.getElementById('all-certs-modal');
+  if (allCertsModal && allCertsModal.classList.contains('active')) {
+    openedFromAllCertsModal = true;
+    allCertsModal.classList.remove('active'); // Close it temporarily
+  } else {
+    openedFromAllCertsModal = false;
+  }
+  
   document.getElementById('cert-modal-img').src = src;
   document.getElementById('cert-modal-title').textContent = title;
   document.getElementById('cert-modal').classList.add('open');
@@ -221,7 +232,16 @@ function openCert(src, title) {
 function closeCert(e) {
   if (e && e.target !== document.getElementById('cert-modal') && !e.target.classList.contains('cert-close')) return;
   document.getElementById('cert-modal').classList.remove('open');
-  document.body.style.overflow = '';
+  
+  // If it was opened from all-certs modal, return to it
+  if (openedFromAllCertsModal) {
+    const allCertsModal = document.getElementById('all-certs-modal');
+    allCertsModal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    openedFromAllCertsModal = false;
+  } else {
+    document.body.style.overflow = '';
+  }
 }
 
 document.addEventListener('keydown', e => {
@@ -488,4 +508,33 @@ document.querySelectorAll('.card-link-btn[data-hint]').forEach(btn => {
   btn.addEventListener('mouseleave', () => {
     hint.classList.remove('visible');
   });
+});
+
+
+// ── Toggle Certificates ──
+function openAllCertsModal() {
+  const modal = document.getElementById('all-certs-modal');
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeAllCertsModal() {
+  const modal = document.getElementById('all-certs-modal');
+  modal.classList.remove('active');
+  document.body.style.overflow = 'auto';
+}
+
+// Close modal when clicking outside
+document.addEventListener('click', function(e) {
+  const modal = document.getElementById('all-certs-modal');
+  if (e.target === modal) {
+    closeAllCertsModal();
+  }
+});
+
+// Close modal with Escape key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    closeAllCertsModal();
+  }
 });

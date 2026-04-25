@@ -243,12 +243,123 @@
         <button class="btn btn-outline btn-sm">View Certificate</button>
       </div>
 
-      <div class="cert-card glass" onclick="openCert('Certificates/Entrepreneurship Foundation.png', 'Entrepreneurship Foundation')">
+      <div class="cert-card glass" onclick="openCert('Certificates/Google Cloud.png', 'Google Cloud')">
+        <div class="cert-thumb">
+          <img src="Certificates/Google Cloud.png" alt="Google Cloud Certificate" />
+          <div class="cert-overlay"><span>🔍 Preview</span></div>
+        </div>
+        <h3>Google Cloud</h3>
+        <p class="cert-issuer">Certificate of Participation</p>
+        <button class="btn btn-outline btn-sm">View Certificate</button>
+      </div>
+
+      <div class="cert-card glass" onclick="openCert('Certificates/Matlab Onramp.png', 'MATLAB Onramp')">
+        <div class="cert-thumb">
+          <img src="Certificates/Matlab Onramp.png" alt="MATLAB Onramp Certificate" />
+          <div class="cert-overlay"><span>🔍 Preview</span></div>
+        </div>
+        <h3>MATLAB Onramp</h3>
+        <p class="cert-issuer">Certificate of Completion</p>
+        <button class="btn btn-outline btn-sm">View Certificate</button>
+      </div>
+
+      <div class="cert-card glass" onclick="openCert('Certificates/Python Essentials 1.png', 'Python Essentials 1')">
+        <div class="cert-thumb">
+          <img src="Certificates/Python Essentials 1.png" alt="Python Essentials 1 Certificate" />
+          <div class="cert-overlay"><span>🔍 Preview</span></div>
+        </div>
+        <h3>Python Essentials 1</h3>
+        <p class="cert-issuer">Certificate of Completion</p>
+        <button class="btn btn-outline btn-sm">View Certificate</button>
+      </div>
+
+      <div class="cert-card glass" onclick="openCert('Certificates/Python Essentials 2.png', 'Python Essentials 2')">
+        <div class="cert-thumb">
+          <img src="Certificates/Python Essentials 2.png" alt="Python Essentials 2 Certificate" />
+          <div class="cert-overlay"><span>🔍 Preview</span></div>
+        </div>
+        <h3>Python Essentials 2</h3>
+        <p class="cert-issuer">Certificate of Completion</p>
+        <button class="btn btn-outline btn-sm">View Certificate</button>
+      </div>
+
+      <div class="cert-card glass" onclick="openCert('Certificates/RedHat Certificate.png', 'RedHat Certificate')">
+        <div class="cert-thumb">
+          <img src="Certificates/RedHat Certificate.png" alt="RedHat Certificate" />
+          <div class="cert-overlay"><span>🔍 Preview</span></div>
+        </div>
+        <h3>RedHat Certificate</h3>
+        <p class="cert-issuer">Certificate of Completion</p>
+        <button class="btn btn-outline btn-sm">View Certificate</button>
+      </div>
+
+      <!-- Hidden certificates -->
+      <div class="cert-card glass cert-hidden" onclick="openCert('Certificates/Entrepreneurship Foundation.png', 'Entrepreneurship Foundation')">
         <div class="cert-thumb">
           <img src="Certificates/Entrepreneurship Foundation.png" alt="Entrepreneurship Foundation Certificate" />
           <div class="cert-overlay"><span>🔍 Preview</span></div>
         </div>
         <h3>Entrepreneurship Foundation</h3>
+        <p class="cert-issuer">Certificate of Completion</p>
+        <button class="btn btn-outline btn-sm">View Certificate</button>
+      </div>
+
+      <div class="cert-card glass cert-hidden" onclick="openCert('Certificates/Aurelion.png', 'Aurelion')">
+        <div class="cert-thumb">
+          <img src="Certificates/Aurelion.png" alt="Aurelion Certificate" />
+          <div class="cert-overlay"><span>🔍 Preview</span></div>
+        </div>
+        <h3>Aurelion</h3>
+        <p class="cert-issuer">Certificate of Participation</p>
+        <button class="btn btn-outline btn-sm">View Certificate</button>
+      </div>
+
+      <div class="cert-card glass cert-hidden" onclick="openCert('Certificates/Cyberops Certificate.png', 'CyberOps Certificate')">
+        <div class="cert-thumb">
+          <img src="Certificates/Cyberops Certificate.png" alt="CyberOps Certificate" />
+          <div class="cert-overlay"><span>🔍 Preview</span></div>
+        </div>
+        <h3>CyberOps Certificate</h3>
+        <p class="cert-issuer">Certificate of Participation</p>
+        <button class="btn btn-outline btn-sm">View Certificate</button>
+      </div>
+
+      <div class="cert-card glass cert-hidden" onclick="openCert('Certificates/Mindkraft Participation.png', 'Mindkraft')">
+        <div class="cert-thumb">
+          <img src="Certificates/Mindkraft Participation.png" alt="Mindkraft Certificate" />
+          <div class="cert-overlay"><span>🔍 Preview</span></div>
+        </div>
+        <h3>Mindkraft</h3>
+        <p class="cert-issuer">Certificate of Participation</p>
+        <button class="btn btn-outline btn-sm">View Certificate</button>
+      </div>
+
+    </div>
+
+    <div style="text-align: center; margin-top: 2rem;">
+      <button id="view-more-certs" class="btn btn-primary" onclick="openAllCertsModal()">View More Certificates</button>
+    </div>
+
+    <!-- Lightbox Modal placeholder (moved to body level) -->
+
+  </div>
+</section>
+
+<!-- ── All Certificates Modal ── -->
+<div id="all-certs-modal" class="all-certs-modal">
+  <div class="all-certs-modal-content glass">
+    <div class="all-certs-header">
+      <h2>CERTIFICATES</h2>
+      <button class="all-certs-close" onclick="closeAllCertsModal()">&times;</button>
+    </div>
+    <div class="all-certs-grid">
+      
+      <div class="cert-card glass" onclick="openCert('Certificates/Google Cloud Digital Leader.png', 'Cloud Digital Leader')">
+        <div class="cert-thumb">
+          <img src="Certificates/Google Cloud Digital Leader.png" alt="Cloud Digital Leader Certificate" />
+          <div class="cert-overlay"><span>🔍 Preview</span></div>
+        </div>
+        <h3>Cloud Digital Leader</h3>
         <p class="cert-issuer">Certificate of Completion</p>
         <button class="btn btn-outline btn-sm">View Certificate</button>
       </div>
@@ -273,36 +384,6 @@
         <button class="btn btn-outline btn-sm">View Certificate</button>
       </div>
 
-      <div class="cert-card glass" onclick="openCert('Certificates/Aurelion.png', 'Aurelion Hackathon')">
-        <div class="cert-thumb">
-          <img src="Certificates/Aurelion.png" alt="Aurelion Certificate" />
-          <div class="cert-overlay"><span>🔍 Preview</span></div>
-        </div>
-        <h3>Aurelion Hackathon</h3>
-        <p class="cert-issuer">Certificate of Participation</p>
-        <button class="btn btn-outline btn-sm">View Certificate</button>
-      </div>
-
-      <div class="cert-card glass" onclick="openCert('Certificates/RedHat Certificate.png', 'RedHat Certificate')">
-        <div class="cert-thumb">
-          <img src="Certificates/RedHat Certificate.png" alt="RedHat Certificate" />
-          <div class="cert-overlay"><span>🔍 Preview</span></div>
-        </div>
-        <h3>RedHat Certificate</h3>
-        <p class="cert-issuer">Certificate of Completion</p>
-        <button class="btn btn-outline btn-sm">View Certificate</button>
-      </div>
-
-      <div class="cert-card glass" onclick="openCert('Certificates/Cyberops Certificate.png', 'CyberOps Certificate')">
-        <div class="cert-thumb">
-          <img src="Certificates/Cyberops Certificate.png" alt="CyberOps Certificate" />
-          <div class="cert-overlay"><span>🔍 Preview</span></div>
-        </div>
-        <h3>CyberOps Certificate</h3>
-        <p class="cert-issuer">Certificate of Participation</p>
-        <button class="btn btn-outline btn-sm">View Certificate</button>
-      </div>
-
       <div class="cert-card glass" onclick="openCert('Certificates/Python Essentials 1.png', 'Python Essentials 1')">
         <div class="cert-thumb">
           <img src="Certificates/Python Essentials 1.png" alt="Python Essentials 1 Certificate" />
@@ -323,11 +404,59 @@
         <button class="btn btn-outline btn-sm">View Certificate</button>
       </div>
 
+      <div class="cert-card glass" onclick="openCert('Certificates/RedHat Certificate.png', 'RedHat Certificate')">
+        <div class="cert-thumb">
+          <img src="Certificates/RedHat Certificate.png" alt="RedHat Certificate" />
+          <div class="cert-overlay"><span>🔍 Preview</span></div>
+        </div>
+        <h3>RedHat Certificate</h3>
+        <p class="cert-issuer">Certificate of Completion</p>
+        <button class="btn btn-outline btn-sm">View Certificate</button>
+      </div>
 
-    <!-- Lightbox Modal placeholder (moved to body level) -->
+      <div class="cert-card glass" onclick="openCert('Certificates/Entrepreneurship Foundation.png', 'Entrepreneurship Foundation')">
+        <div class="cert-thumb">
+          <img src="Certificates/Entrepreneurship Foundation.png" alt="Entrepreneurship Foundation Certificate" />
+          <div class="cert-overlay"><span>🔍 Preview</span></div>
+        </div>
+        <h3>Entrepreneurship Foundation</h3>
+        <p class="cert-issuer">Certificate of Completion</p>
+        <button class="btn btn-outline btn-sm">View Certificate</button>
+      </div>
 
+      <div class="cert-card glass" onclick="openCert('Certificates/Aurelion.png', 'Aurelion')">
+        <div class="cert-thumb">
+          <img src="Certificates/Aurelion.png" alt="Aurelion Certificate" />
+          <div class="cert-overlay"><span>🔍 Preview</span></div>
+        </div>
+        <h3>Aurelion</h3>
+        <p class="cert-issuer">Certificate of Participation</p>
+        <button class="btn btn-outline btn-sm">View Certificate</button>
+      </div>
+
+      <div class="cert-card glass" onclick="openCert('Certificates/Cyberops Certificate.png', 'CyberOps Certificate')">
+        <div class="cert-thumb">
+          <img src="Certificates/Cyberops Certificate.png" alt="CyberOps Certificate" />
+          <div class="cert-overlay"><span>🔍 Preview</span></div>
+        </div>
+        <h3>CyberOps Certificate</h3>
+        <p class="cert-issuer">Certificate of Participation</p>
+        <button class="btn btn-outline btn-sm">View Certificate</button>
+      </div>
+
+      <div class="cert-card glass" onclick="openCert('Certificates/Mindkraft Participation.png', 'Mindkraft')">
+        <div class="cert-thumb">
+          <img src="Certificates/Mindkraft Participation.png" alt="Mindkraft Certificate" />
+          <div class="cert-overlay"><span>🔍 Preview</span></div>
+        </div>
+        <h3>Mindkraft</h3>
+        <p class="cert-issuer">Certificate of Participation</p>
+        <button class="btn btn-outline btn-sm">View Certificate</button>
+      </div>
+
+    </div>
   </div>
-</section>
+</div>
 
 <!-- ── Contact ── -->
 <section id="contact">
