@@ -21,6 +21,48 @@ function type() {
 }
 type();
 
+/* ── Theme Toggle ── */
+const themes = ['green', 'red', 'cyan', 'yellow'];
+
+// Load saved theme
+const savedTheme = localStorage.getItem('theme') || 'green';
+if (savedTheme !== 'green') {
+  document.documentElement.setAttribute('data-theme', savedTheme);
+}
+
+// Set active color on load
+document.querySelectorAll('.theme-color').forEach(color => {
+  if (color.dataset.theme === savedTheme) {
+    color.classList.add('active');
+  } else {
+    color.classList.remove('active');
+  }
+});
+
+// Handle color clicks
+document.querySelectorAll('.theme-color').forEach(color => {
+  color.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const newTheme = color.dataset.theme;
+    
+    // Remove active from all
+    document.querySelectorAll('.theme-color').forEach(c => c.classList.remove('active'));
+    
+    // Add active to clicked
+    color.classList.add('active');
+    
+    // Apply theme
+    if (newTheme === 'green') {
+      document.documentElement.removeAttribute('data-theme');
+    } else {
+      document.documentElement.setAttribute('data-theme', newTheme);
+    }
+    
+    localStorage.setItem('theme', newTheme);
+    console.log('Theme changed to:', newTheme);
+  });
+});
+
 /* ── Sticky Navbar ── */
 const navbar = document.getElementById('navbar');
 window.addEventListener('scroll', () => {
@@ -116,8 +158,20 @@ function initParticles() {
   particles = Array.from({ length: COUNT }, mkParticle);
 }
 
+function getThemeColors() {
+  const theme = document.documentElement.getAttribute('data-theme') || 'green';
+  const colors = {
+    green: { rgb: '0,255,80', rgba: '57,255,100', shadow: '74,222,128' },
+    red: { rgb: '255,80,80', rgba: '248,113,113', shadow: '239,68,68' },
+    cyan: { rgb: '34,211,238', rgba: '34,211,238', shadow: '6,182,212' },
+    yellow: { rgb: '250,204,21', rgba: '250,204,21', shadow: '234,179,8' }
+  };
+  return colors[theme] || colors.green;
+}
+
 function drawParticles() {
   ctx.clearRect(0, 0, W, H);
+  const colors = getThemeColors();
 
   // Update & draw dots
   particles.forEach(p => {
@@ -143,9 +197,9 @@ function drawParticles() {
     // Spin
     p.angle += p.spinSpeed;
 
-    // Strong green glow via shadow
+    // Strong glow via shadow
     ctx.shadowBlur  = p.r > 1.2 ? 14 : 6;
-    ctx.shadowColor = `rgba(0,255,80,${p.a})`;
+    ctx.shadowColor = `rgba(${colors.rgb},${p.a})`;
 
     // Draw 5-point star
     ctx.save();
@@ -163,7 +217,7 @@ function drawParticles() {
         : ctx.lineTo(Math.cos(angle) * rad, Math.sin(angle) * rad);
     }
     ctx.closePath();
-    ctx.fillStyle = `rgba(57,255,100,${p.a})`;
+    ctx.fillStyle = `rgba(${colors.rgba},${p.a})`;
     ctx.fill();
     ctx.restore();
   });
@@ -181,7 +235,7 @@ function drawParticles() {
         ctx.beginPath();
         ctx.moveTo(particles[i].x, particles[i].y);
         ctx.lineTo(particles[j].x, particles[j].y);
-        ctx.strokeStyle = `rgba(34,197,94,${alpha})`;
+        ctx.strokeStyle = `rgba(${colors.shadow},${alpha})`;
         ctx.lineWidth   = 0.6;
         ctx.stroke();
       }
@@ -196,7 +250,7 @@ function drawParticles() {
       ctx.beginPath();
       ctx.moveTo(particles[i].x, particles[i].y);
       ctx.lineTo(mouse.x, mouse.y);
-      ctx.strokeStyle = `rgba(74,222,128,${alpha})`;
+      ctx.strokeStyle = `rgba(${colors.shadow},${alpha})`;
       ctx.lineWidth   = 0.8;
       ctx.stroke();
     }
@@ -392,6 +446,17 @@ document.addEventListener('keydown', e => {
   // Animated ring radius for smooth scale transition
   let ringR = 9;
 
+  function getCursorColors() {
+    const theme = document.documentElement.getAttribute('data-theme') || 'green';
+    const colors = {
+      green: { base: '34,197,94', bright: '74,222,128' },
+      red: { base: '239,68,68', bright: '248,113,113' },
+      cyan: { base: '6,182,212', bright: '34,211,238' },
+      yellow: { base: '234,179,8', bright: '250,204,21' }
+    };
+    return colors[theme] || colors.green;
+  }
+
   function drawTrail() {
     points.push({ x: cx, y: cy });
     if (points.length > TRAIL_LEN) points.shift();
@@ -401,6 +466,7 @@ document.addEventListener('keydown', e => {
     ringR += (targetR - ringR) * 0.18;
 
     tctx.clearRect(0, 0, TW, TH);
+    const colors = getCursorColors();
 
     // ── Comet tail ──
     if (points.length > 2) {
@@ -415,15 +481,15 @@ document.addEventListener('keydown', e => {
         points[0].x, points[0].y,
         points[points.length - 1].x, points[points.length - 1].y
       );
-      grad.addColorStop(0,   'rgba(34,197,94,0)');
-      grad.addColorStop(0.6, 'rgba(74,222,128,0.25)');
-      grad.addColorStop(1,   'rgba(74,222,128,0.85)');
+      grad.addColorStop(0,   `rgba(${colors.base},0)`);
+      grad.addColorStop(0.6, `rgba(${colors.bright},0.25)`);
+      grad.addColorStop(1,   `rgba(${colors.bright},0.85)`);
       tctx.strokeStyle = grad;
       tctx.lineWidth   = 2.5;
       tctx.lineCap     = 'round';
       tctx.lineJoin    = 'round';
       tctx.shadowBlur  = 10;
-      tctx.shadowColor = 'rgba(74,222,128,0.6)';
+      tctx.shadowColor = `rgba(${colors.bright},0.6)`;
       tctx.stroke();
       tctx.shadowBlur  = 0;
     }
@@ -446,10 +512,10 @@ document.addEventListener('keydown', e => {
         tctx.lineTo(0, s);
         tctx.lineTo(-s, 0);
         tctx.closePath();
-        tctx.strokeStyle = 'rgba(74,222,128,0.95)';
+        tctx.strokeStyle = `rgba(${colors.bright},0.95)`;
         tctx.lineWidth   = 1.5;
         tctx.shadowBlur  = 16;
-        tctx.shadowColor = 'rgba(74,222,128,0.8)';
+        tctx.shadowColor = `rgba(${colors.bright},0.8)`;
         tctx.stroke();
 
         // Inner diamond (counter-rotate for contrast)
@@ -461,9 +527,9 @@ document.addEventListener('keydown', e => {
         tctx.lineTo(0, si);
         tctx.lineTo(-si, 0);
         tctx.closePath();
-        tctx.fillStyle  = 'rgba(74,222,128,0.25)';
+        tctx.fillStyle  = `rgba(${colors.bright},0.25)`;
         tctx.fill();
-        tctx.strokeStyle = 'rgba(74,222,128,0.6)';
+        tctx.strokeStyle = `rgba(${colors.bright},0.6)`;
         tctx.lineWidth   = 1;
         tctx.stroke();
 
@@ -474,17 +540,17 @@ document.addEventListener('keydown', e => {
         // ── Default state: ring + center dot ──
         tctx.beginPath();
         tctx.arc(cx, cy, ringR, 0, Math.PI * 2);
-        tctx.strokeStyle = 'rgba(74,222,128,0.9)';
+        tctx.strokeStyle = `rgba(${colors.bright},0.9)`;
         tctx.lineWidth   = 1.5;
         tctx.shadowBlur  = 12;
-        tctx.shadowColor = 'rgba(74,222,128,0.7)';
+        tctx.shadowColor = `rgba(${colors.bright},0.7)`;
         tctx.stroke();
 
         tctx.beginPath();
         tctx.arc(cx, cy, 2.5, 0, Math.PI * 2);
-        tctx.fillStyle   = 'rgba(74,222,128,1)';
+        tctx.fillStyle   = `rgba(${colors.bright},1)`;
         tctx.shadowBlur  = 8;
-        tctx.shadowColor = 'rgba(74,222,128,1)';
+        tctx.shadowColor = `rgba(${colors.bright},1)`;
         tctx.fill();
         tctx.shadowBlur  = 0;
       }
