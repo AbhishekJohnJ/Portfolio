@@ -862,6 +862,7 @@ section { padding: 7rem 2rem; position: relative; z-index: 1; }
 .profile-icon svg { width: 18px; height: 18px; }
 .github-icon   { background: rgba(255,255,255,0.06); color: var(--white); }
 .linkedin-icon { background: rgba(10,102,194,0.2); color: #0a66c2; }
+.leetcode-icon { background: rgba(255,161,22,0.2); color: #FFA116; }
 .codechef-icon { background: rgba(90,60,30,0.25); color: #c97d2e; }
 
 .profile-card--codechef { align-items: center; }
