@@ -410,10 +410,11 @@ a, button, input, textarea, [role="button"] { cursor: none; }
 
 /* ── Sections ── */
 section { padding: 7rem 2rem; position: relative; z-index: 1; }
-#about        { background: var(--bg-2); }
-#projects     { background: var(--bg); }
-#certificates { background: var(--bg-2); }
-#contact      { background: var(--bg); }
+#about        { background: rgba(10, 10, 10, 0.3); }
+#projects     { background: rgba(0, 0, 0, 0.3); }
+#certificates { background: rgba(10, 10, 10, 0.3); }
+#experience   { background: rgba(0, 0, 0, 0.3); }
+#contact      { background: rgba(0, 0, 0, 0.3); }
 #contact::before {
   content: '';
   display: block;
